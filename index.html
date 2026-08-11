@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0b7a3b">
+<title>Mi compra · Mercadona</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#f5f6f7;color:#202124}
+header{position:sticky;top:0;z-index:10;background:#0b7a3b;color:white;padding:16px 16px 12px;box-shadow:0 2px 8px #0002}
+h1{margin:0;font-size:22px}
+.sub{font-size:13px;opacity:.9;margin-top:4px}
+.tabs{display:flex;gap:8px;margin-top:12px}
+.tab{flex:1;border:0;border-radius:12px;padding:10px 8px;font-weight:700;background:#ffffff26;color:white}
+.tab.active{background:white;color:#0b7a3b}
+main{max-width:650px;margin:auto;padding:12px 12px 100px}
+.category{margin:14px 0 7px;font-size:13px;font-weight:800;color:#59636e;text-transform:uppercase}
+.item{display:flex;align-items:center;gap:10px;background:white;border-radius:15px;padding:12px;margin:7px 0;box-shadow:0 1px 3px #0001}
+.check{width:44px;height:44px;border-radius:12px;border:2px solid #ccd2d7;background:white;font-size:23px;flex:none}
+.item.need .check{background:#d93025;border-color:#d93025;color:white}
+.item.done .check{background:#0b7a3b;border-color:#0b7a3b;color:white}
+.name{flex:1;font-size:17px;font-weight:600}
+.qty{width:55px;border:1px solid #ddd;border-radius:9px;padding:8px;text-align:center;font-size:15px}
+.addbar{display:flex;gap:8px;position:fixed;bottom:0;left:0;right:0;background:white;padding:10px 12px;box-shadow:0 -2px 10px #0002}
+.addbar input{flex:1;border:1px solid #ccd2d7;border-radius:12px;padding:13px;font-size:16px}
+.addbar button{border:0;border-radius:12px;background:#0b7a3b;color:white;padding:0 18px;font-size:20px;font-weight:700}
+.empty{text-align:center;color:#6b7280;padding:50px 20px;font-size:16px}
+.small{font-size:13px;color:#6b7280;margin:10px 2px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🛒 Mi compra</h1>
+  <div class="sub" id="summary">Todo en casa</div>
+  <div class="tabs">
+    <button class="tab active" id="needTab" onclick="setView('need')">🔴 Comprar</button>
+    <button class="tab" id="allTab" onclick="setView('all')">📋 Todos</button>
+  </div>
+</header>
+<main id="list"></main>
+<div class="addbar">
+  <input id="newItem" placeholder="Añadir producto…" autocomplete="off">
+  <button onclick="addItem()">＋</button>
+</div>
+
+<script>
+const initial=[
+["Lácteos","Leche"],["Lácteos","Yogures"],["Lácteos","Queso"],
+["Frescos","Huevos"],["Panadería","Pan"],
+["Carnes","Pechuga de pollo"],["Carnes","Carne picada"],["Pescadería","Pescado"],
+["Fruta y verdura","Fruta"],["Fruta y verdura","Verdura"],["Fruta y verdura","Patatas"],
+["Despensa","Arroz"],["Despensa","Pasta"],["Despensa","Legumbres"],["Despensa","Tomate triturado"],
+["Despensa","Aceite de oliva"],["Despensa","Sal"],["Despensa","Azúcar"],
+["Desayuno","Café"],["Desayuno","Cereales"],["Desayuno","Galletas"],
+["Bebidas","Agua"],["Bebidas","Refrescos"],
+["Hogar","Papel higiénico"],["Hogar","Papel de cocina"],["Hogar","Bolsas de basura"],
+["Limpieza","Detergente lavadora"],["Limpieza","Lavavajillas"],["Limpieza","Limpiador"],
+["Higiene","Champú"],["Higiene","Gel"],["Higiene","Pasta de dientes"]
+];
+
+let items=JSON.parse(localStorage.getItem("mercadonaItems")||"null");
+if(!items) items=initial.map((x,i)=>({id:i+1,cat:x[0],name:x[1],need:false,qty:1}));
+let view=localStorage.getItem("mercadonaView")||"need";
+
+function save(){localStorage.setItem("mercadonaItems",JSON.stringify(items));}
+function setView(v){view=v;localStorage.setItem("mercadonaView",v);render();}
+function toggle(id){
+ const x=items.find(i=>i.id===id); if(x){x.need=!x.need;save();render();}
+}
+function addItem(){
+ const input=document.getElementById("newItem"), name=input.value.trim();
+ if(!name)return;
+ const cat="Mis productos";
+ items.push({id:Date.now(),cat,name,need:true,qty:1});
+ input.value=""; save(); setView("need");
+}
+function changeQty(id,val){
+ const x=items.find(i=>i.id===id); if(x){x.qty=Math.max(1,parseInt(val)||1);save();}
+}
+function render(){
+ document.getElementById("needTab").classList.toggle("active",view==="need");
+ document.getElementById("allTab").classList.toggle("active",view==="all");
+ const need=items.filter(i=>i.need), list=view==="need"?need:items;
+ document.getElementById("summary").textContent=need.length?`${need.length} producto${need.length===1?"":"s"} para comprar`:"Todo en casa 🎉";
+ const root=document.getElementById("list"); root.innerHTML="";
+ if(!list.length){root.innerHTML='<div class="empty">🎉 No tienes nada pendiente.<br>Cuando se te acabe algo, añádelo abajo o márcalo en «Todos».</div>';return;}
+ const cats=[...new Set(list.map(i=>i.cat))];
+ cats.forEach(cat=>{
+   const arr=list.filter(i=>i.cat===cat);
+   const title=document.createElement("div"); title.className="category"; title.textContent=cat; root.appendChild(title);
+   arr.forEach(i=>{
+    const row=document.createElement("div"); row.className="item "+(i.need?"need":"done");
+    row.innerHTML=`<button class="check" aria-label="${i.need?"Comprar":"Marcar para comprar"}" onclick="toggle(${i.id})">${i.need?"✓":""}</button>
+      <div class="name">${escapeHtml(i.name)}</div>
+      <input class="qty" type="number" min="1" value="${i.qty}" onchange="changeQty(${i.id},this.value)" aria-label="Cantidad">`;
+    root.appendChild(row);
+   });
+ });
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+document.getElementById("newItem").addEventListener("keydown",e=>{if(e.key==="Enter")addItem();});
+render();
+</script>
+</body>
+</html>
