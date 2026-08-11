@@ -1,106 +1,50 @@
 <!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#0b7a3b">
-<title>Mi compra · Mercadona</title>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b7a3b"><title>Mi Compra V2</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#f5f6f7;color:#202124}
-header{position:sticky;top:0;z-index:10;background:#0b7a3b;color:white;padding:16px 16px 12px;box-shadow:0 2px 8px #0002}
-h1{margin:0;font-size:22px}
-.sub{font-size:13px;opacity:.9;margin-top:4px}
-.tabs{display:flex;gap:8px;margin-top:12px}
-.tab{flex:1;border:0;border-radius:12px;padding:10px 8px;font-weight:700;background:#ffffff26;color:white}
-.tab.active{background:white;color:#0b7a3b}
-main{max-width:650px;margin:auto;padding:12px 12px 100px}
-.category{margin:14px 0 7px;font-size:13px;font-weight:800;color:#59636e;text-transform:uppercase}
-.item{display:flex;align-items:center;gap:10px;background:white;border-radius:15px;padding:12px;margin:7px 0;box-shadow:0 1px 3px #0001}
-.check{width:44px;height:44px;border-radius:12px;border:2px solid #ccd2d7;background:white;font-size:23px;flex:none}
-.item.need .check{background:#d93025;border-color:#d93025;color:white}
-.item.done .check{background:#0b7a3b;border-color:#0b7a3b;color:white}
-.name{flex:1;font-size:17px;font-weight:600}
-.qty{width:55px;border:1px solid #ddd;border-radius:9px;padding:8px;text-align:center;font-size:15px}
-.addbar{display:flex;gap:8px;position:fixed;bottom:0;left:0;right:0;background:white;padding:10px 12px;box-shadow:0 -2px 10px #0002}
-.addbar input{flex:1;border:1px solid #ccd2d7;border-radius:12px;padding:13px;font-size:16px}
-.addbar button{border:0;border-radius:12px;background:#0b7a3b;color:white;padding:0 18px;font-size:20px;font-weight:700}
-.empty{text-align:center;color:#6b7280;padding:50px 20px;font-size:16px}
-.small{font-size:13px;color:#6b7280;margin:10px 2px}
-</style>
-</head>
-<body>
-<header>
-  <h1>🛒 Mi compra</h1>
-  <div class="sub" id="summary">Todo en casa</div>
-  <div class="tabs">
-    <button class="tab active" id="needTab" onclick="setView('need')">🔴 Comprar</button>
-    <button class="tab" id="allTab" onclick="setView('all')">📋 Todos</button>
-  </div>
-</header>
-<main id="list"></main>
-<div class="addbar">
-  <input id="newItem" placeholder="Añadir producto…" autocomplete="off">
-  <button onclick="addItem()">＋</button>
-</div>
-
+*{box-sizing:border-box}body{margin:0;background:#f4f6f5;color:#202124;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:92px}
+header{background:#0b7a3b;color:#fff;padding:15px 14px;position:sticky;top:0;z-index:10}h1{margin:0;font-size:24px}.sub{font-size:13px;margin-top:3px}.tabs{display:flex;gap:8px;margin-top:12px}.tab{flex:1;border:0;border-radius:12px;padding:11px;background:#ffffff25;color:#fff;font-weight:800}.active{background:#fff!important;color:#0b7a3b!important}
+main{max-width:720px;margin:auto;padding:9px 12px}.cat{font-size:12px;font-weight:900;color:#667085;margin:17px 3px 6px;text-transform:uppercase}
+.card{background:#fff;border-radius:15px;padding:9px;margin:7px 0;box-shadow:0 1px 4px #0001}.need{border-left:5px solid #d93025}.row{display:flex;align-items:center;gap:8px}.drag{font-size:20px;color:#98a2b3}.name{flex:1;font-size:17px;font-weight:650}.check{width:45px;height:45px;border-radius:12px;border:2px solid #ccd2d7;background:#fff;font-size:21px}.need .check{background:#d93025;color:#fff;border-color:#d93025}.done .check{background:#0b7a3b;color:#fff;border-color:#0b7a3b}
+.qty{width:52px;height:41px;border:1px solid #d5d9dd;border-radius:10px;text-align:center;font-size:16px}.eb{width:41px;height:41px;border:0;border-radius:10px;background:#eef0f1;font-size:18px}
+.editor{display:none;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.editor.show{display:grid}.editor input,.editor select{width:100%;padding:10px;border:1px solid #ccd2d7;border-radius:10px;background:#fff;font-size:15px}.wide{grid-column:1/-1}.actions{grid-column:1/-1;display:flex;gap:7px}.actions button{flex:1;padding:10px;border:0;border-radius:10px;font-weight:800}.save{background:#e6f4ea;color:#0b7a3b}.delete{background:#fde8e7;color:#b42318}
+.panel{background:#fff;border-radius:15px;padding:13px;margin:10px 0;box-shadow:0 1px 4px #0001}.panel h2{margin:0 0 8px;font-size:17px}.newcat{display:flex;gap:7px}.newcat input{flex:1;padding:11px;border:1px solid #ccd2d7;border-radius:10px;font-size:15px}.newcat button{border:0;border-radius:10px;background:#0b7a3b;color:#fff;padding:0 15px;font-weight:800}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;padding:10px 12px;box-shadow:0 -2px 10px #0002;z-index:20}.add{max-width:720px;margin:auto;display:flex;gap:7px}.add input{flex:1;min-width:0;padding:14px;border:1px solid #ccd2d7;border-radius:12px;font-size:16px}.add select{width:135px;border:1px solid #ccd2d7;border-radius:12px;background:#fff;padding:8px;font-size:13px}.add button{width:54px;border:0;border-radius:12px;background:#0b7a3b;color:#fff;font-size:25px}
+.empty{text-align:center;padding:55px 20px;color:#667085}.hint{font-size:13px;color:#667085;margin:4px 2px 12px}
+</style></head><body>
+<header><h1>🛒 Mi Compra</h1><div class="sub" id="summary"></div>
+<div class="tabs"><button id="buyTab" class="tab active" onclick="view='buy';render()">🔴 Comprar</button><button id="allTab" class="tab" onclick="view='all';render()">📋 Mi lista</button></div></header>
+<main id="main"></main>
+<div class="bottom"><div class="add"><input id="newName" placeholder="Nuevo producto…"><select id="newCat"></select><button onclick="addProduct()">＋</button></div></div>
 <script>
-const initial=[
-["Lácteos","Leche"],["Lácteos","Yogures"],["Lácteos","Queso"],
-["Frescos","Huevos"],["Panadería","Pan"],
-["Carnes","Pechuga de pollo"],["Carnes","Carne picada"],["Pescadería","Pescado"],
-["Fruta y verdura","Fruta"],["Fruta y verdura","Verdura"],["Fruta y verdura","Patatas"],
-["Despensa","Arroz"],["Despensa","Pasta"],["Despensa","Legumbres"],["Despensa","Tomate triturado"],
-["Despensa","Aceite de oliva"],["Despensa","Sal"],["Despensa","Azúcar"],
-["Desayuno","Café"],["Desayuno","Cereales"],["Desayuno","Galletas"],
-["Bebidas","Agua"],["Bebidas","Refrescos"],
-["Hogar","Papel higiénico"],["Hogar","Papel de cocina"],["Hogar","Bolsas de basura"],
-["Limpieza","Detergente lavadora"],["Limpieza","Lavavajillas"],["Limpieza","Limpiador"],
-["Higiene","Champú"],["Higiene","Gel"],["Higiene","Pasta de dientes"]
-];
-
-let items=JSON.parse(localStorage.getItem("mercadonaItems")||"null");
-if(!items) items=initial.map((x,i)=>({id:i+1,cat:x[0],name:x[1],need:false,qty:1}));
-let view=localStorage.getItem("mercadonaView")||"need";
-
-function save(){localStorage.setItem("mercadonaItems",JSON.stringify(items));}
-function setView(v){view=v;localStorage.setItem("mercadonaView",v);render();}
-function toggle(id){
- const x=items.find(i=>i.id===id); if(x){x.need=!x.need;save();render();}
-}
-function addItem(){
- const input=document.getElementById("newItem"), name=input.value.trim();
- if(!name)return;
- const cat="Mis productos";
- items.push({id:Date.now(),cat,name,need:true,qty:1});
- input.value=""; save(); setView("need");
-}
-function changeQty(id,val){
- const x=items.find(i=>i.id===id); if(x){x.qty=Math.max(1,parseInt(val)||1);save();}
-}
+const baseCats=["Lácteos","Frescos","Panadería","Carnes","Pescadería","Fruta y verdura","Despensa","Desayuno","Bebidas","Hogar","Limpieza","Higiene","Mascotas","Congelados","Mis productos"];
+const seed=[["Lácteos","Leche"],["Lácteos","Yogures"],["Lácteos","Queso"],["Lácteos","Mantequilla"],["Frescos","Huevos"],["Panadería","Pan"],["Carnes","Pechuga de pollo"],["Carnes","Carne picada"],["Carnes","Jamón cocido"],["Pescadería","Pescado"],["Fruta y verdura","Fruta"],["Fruta y verdura","Verdura"],["Fruta y verdura","Patatas"],["Fruta y verdura","Tomates"],["Despensa","Arroz"],["Despensa","Pasta"],["Despensa","Lentejas"],["Despensa","Garbanzos"],["Despensa","Tomate triturado"],["Despensa","Aceite de oliva"],["Despensa","Sal"],["Despensa","Azúcar"],["Desayuno","Café"],["Desayuno","Cereales"],["Desayuno","Galletas"],["Bebidas","Agua"],["Bebidas","Refrescos"],["Hogar","Papel higiénico"],["Hogar","Papel de cocina"],["Limpieza","Detergente"],["Limpieza","Lavavajillas"],["Higiene","Champú"],["Higiene","Gel"],["Higiene","Pasta de dientes"]];
+let state=JSON.parse(localStorage.getItem("miCompraV2")||"null")||{cats:baseCats,items:seed.map((x,i)=>({id:i+1,cat:x[0],name:x[1],qty:1,need:false,edit:false,order:i}))},view="buy";
+function save(){localStorage.setItem("miCompraV2",JSON.stringify(state))}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function populate(){newCat.innerHTML=state.cats.map(c=>`<option>${esc(c)}</option>`).join("")}
+function toggle(id){let x=state.items.find(a=>a.id==id);x.need=!x.need;save();render()}
+function addProduct(){let n=newName.value.trim(),c=newCat.value;if(!n)return;state.items.push({id:Date.now(),cat:c,name:n,qty:1,need:true,edit:false,order:state.items.length});newName.value="";save();render()}
+function edit(id){let x=state.items.find(a=>a.id==id);x.edit=!x.edit;render()}
+function upd(id,k,v){let x=state.items.find(a=>a.id==id);x[k]=k=="qty"?Math.max(1,parseInt(v)||1):v;save()}
+function del(id){if(confirm("¿Eliminar este producto?")){state.items=state.items.filter(x=>x.id!=id);save();render()}}
+function createCat(){let e=document.getElementById("catInput"),n=e.value.trim();if(!n)return;if(state.cats.includes(n)){alert("Esa categoría ya existe.");return}state.cats.push(n);e.value="";save();render()}
+function removeCat(c){if(baseCats.includes(c))return;if(confirm("¿Eliminar la categoría? Sus productos pasarán a Mis productos.")){state.items.forEach(x=>{if(x.cat==c)x.cat="Mis productos"});state.cats=state.cats.filter(x=>x!=c);save();render()}}
+function move(id,dir){let a=state.items.slice().sort((x,y)=>x.order-y.order),i=a.findIndex(x=>x.id==id),j=i+dir;if(j<0||j>=a.length)return;[a[i].order,a[j].order]=[a[j].order,a[i].order];save();render()}
 function render(){
- document.getElementById("needTab").classList.toggle("active",view==="need");
- document.getElementById("allTab").classList.toggle("active",view==="all");
- const need=items.filter(i=>i.need), list=view==="need"?need:items;
- document.getElementById("summary").textContent=need.length?`${need.length} producto${need.length===1?"":"s"} para comprar`:"Todo en casa 🎉";
- const root=document.getElementById("list"); root.innerHTML="";
- if(!list.length){root.innerHTML='<div class="empty">🎉 No tienes nada pendiente.<br>Cuando se te acabe algo, añádelo abajo o márcalo en «Todos».</div>';return;}
- const cats=[...new Set(list.map(i=>i.cat))];
- cats.forEach(cat=>{
-   const arr=list.filter(i=>i.cat===cat);
-   const title=document.createElement("div"); title.className="category"; title.textContent=cat; root.appendChild(title);
-   arr.forEach(i=>{
-    const row=document.createElement("div"); row.className="item "+(i.need?"need":"done");
-    row.innerHTML=`<button class="check" aria-label="${i.need?"Comprar":"Marcar para comprar"}" onclick="toggle(${i.id})">${i.need?"✓":""}</button>
-      <div class="name">${escapeHtml(i.name)}</div>
-      <input class="qty" type="number" min="1" value="${i.qty}" onchange="changeQty(${i.id},this.value)" aria-label="Cantidad">`;
-    root.appendChild(row);
-   });
- });
+populate();buyTab.classList.toggle("active",view=="buy");allTab.classList.toggle("active",view=="all");
+let pending=state.items.filter(x=>x.need),shown=(view=="buy"?pending:state.items).slice().sort((a,b)=>a.order-b.order);
+summary.textContent=pending.length?`${pending.length} pendiente${pending.length==1?"":"s"} de compra`:"Todo en casa 🎉";main.innerHTML="";
+if(view=="all"){let p=document.createElement("div");p.className="panel";p.innerHTML='<h2>🗂️ Mis categorías</h2><div class="hint">Al añadir un producto eliges si va a Lácteos, Frescos, Carnes, Pescadería, Fruta y verdura, etc. También puedes crear categorías nuevas.</div><div class="newcat"><input id="catInput" placeholder="Nueva categoría…"><button onclick="createCat()">＋ Añadir</button></div>';main.appendChild(p)}
+if(!shown.length){main.innerHTML+='<div class="empty">🎉<br><br><b>No tienes productos pendientes.</b><br><br>En «Mi lista» puedes añadirlos y organizarlos.</div>';return}
+[...new Set(shown.map(x=>x.cat))].forEach(cat=>{let h=document.createElement("div");h.className="cat";h.textContent=cat;main.appendChild(h);
+shown.filter(x=>x.cat==cat).forEach(x=>{let d=document.createElement("div");d.className="card "+(x.need?"need":"done");
+let opts=state.cats.map(c=>`<option ${c==x.cat?"selected":""}>${esc(c)}</option>`).join("");
+d.innerHTML=`<div class="row"><span class="drag">☷</span><button class="check" onclick="toggle(${x.id})">${x.need?"✓":""}</button><div class="name">${esc(x.name)}</div><input class="qty" type="number" min="1" value="${x.qty}" onchange="upd(${x.id},'qty',this.value)"><button class="eb" onclick="edit(${x.id})">✏️</button></div>
+<div class="editor ${x.edit?"show":""}"><input class="wide" value="${esc(x.name)}" onchange="upd(${x.id},'name',this.value)"><select onchange="upd(${x.id},'cat',this.value)">${opts}</select><div class="actions"><button class="save" onclick="edit(${x.id})">✓ Guardar</button><button class="delete" onclick="del(${x.id})">🗑 Eliminar</button></div></div>
+<div style="display:flex;gap:6px;margin-top:7px"><button class="eb" style="width:auto;padding:0 12px" onclick="move(${x.id},-1)">↑ Subir</button><button class="eb" style="width:auto;padding:0 12px" onclick="move(${x.id},1)">↓ Bajar</button>${!baseCats.includes(cat)?`<button class="eb" style="width:auto;padding:0 12px;margin-left:auto" onclick="removeCat('${esc(cat).replace(/'/g,"\\\\'")}')">🗑 Categoría</button>`:""}</div>`;
+main.appendChild(d)})})
 }
-function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
-document.getElementById("newItem").addEventListener("keydown",e=>{if(e.key==="Enter")addItem();});
-render();
-</script>
-</body>
-</html>
+newName.addEventListener("keydown",e=>{if(e.key=="Enter")addProduct()});render();
+</script></body></html>
